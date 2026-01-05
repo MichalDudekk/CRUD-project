@@ -1,31 +1,26 @@
-import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+// app.ts
+import { APP_PORT } from "./config/env.js";
+import express, { type Application } from "express";
 
-// Ładowanie .env z katalogu wyżej
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+import routesUsers from "./routes/routesUser.js";
+import database from "./database.js";
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME!,
-    process.env.DB_USER!,
-    process.env.DB_PASSWORD!,
-    {
-        host: "127.0.0.1",
-        dialect: "postgres",
-        // logging: false // wyłączenie logów w konsoli
-    }
-);
+const app: Application = express();
+const port = APP_PORT;
 
-async function testConnection() {
-    try {
-        await sequelize.authenticate();
+app.use(express.json()); // Middleware do parsowania JSON
+app.use("/api", routesUsers);
+
+// Synchronizacja z bazą i start serwera
+database
+    .sync({ alter: true }) // alter: true aktualizuje tabele po zmianie modelu zamiast je usuwać
+    .then(() => {
         console.log("Connected to database");
-    } catch (error) {
-        console.error("Could not connect to database", error);
-    }
-}
 
-testConnection();
+        app.listen(port, () => {
+            console.log(`Server is running on: http://localhost:${port}`);
+        });
+    })
+    .catch((err) => {
+        console.error("Failed to connect to database:", err);
+    });
