@@ -1,2 +1,4 @@
 .env
 pg_data/
+
+backend/node_modules
