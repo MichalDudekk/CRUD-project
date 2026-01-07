@@ -20,6 +20,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare Email: string;
     declare Password: string;
     declare IsAdmin: boolean;
+    declare Session: string;
 
     declare shippingDetails?: NonAttribute<ShippingDetail[]>;
     declare creditCardDetails?: NonAttribute<CreditCardDetail[]>;
@@ -47,6 +48,11 @@ User.init(
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
+        },
+        Session: {
+            type: DataTypes.STRING(128),
+            allowNull: true,
+            defaultValue: null,
         },
     },
     {

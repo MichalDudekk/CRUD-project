@@ -3,8 +3,9 @@ import { APP_PORT } from "./config/env.js";
 import express, { type Application } from "express";
 
 import database from "./database.js";
-import routesUsers from "./routes/routesUser.js";
 import "./models/index.js";
+
+import routesUsers from "./routes/routesUser.js";
 
 const app: Application = express();
 const port = APP_PORT;
