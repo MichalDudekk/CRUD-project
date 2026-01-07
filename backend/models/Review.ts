@@ -1,4 +1,3 @@
-// models/Order.ts
 import {
     DataTypes,
     Model,
@@ -11,24 +10,27 @@ import {
 import database from "../database.js";
 
 import type User from "./User.js";
-import type OrderDetail from "./OrderDetail.js";
+import type Product from "./Product.js";
 
-class Order extends Model<
-    InferAttributes<Order>,
-    InferCreationAttributes<Order>
+class Review extends Model<
+    InferAttributes<Review>,
+    InferCreationAttributes<Review>
 > {
-    declare OrderID: CreationOptional<number>;
+    declare ReviewID: CreationOptional<number>;
     declare UserID: ForeignKey<User["UserID"]>;
-    declare OrderDate: Date;
+    declare ProductID: ForeignKey<Product["ProductID"]>;
+
+    declare Rating: number;
+    declare Content: string;
     declare Status: string;
 
     declare user?: NonAttribute<User>;
-    declare orderDetails?: NonAttribute<OrderDetail[]>;
+    declare product?: NonAttribute<Product>;
 }
 
-Order.init(
+Review.init(
     {
-        OrderID: {
+        ReviewID: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
@@ -37,8 +39,17 @@ Order.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        OrderDate: {
-            type: DataTypes.DATE,
+        ProductID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        Rating: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: { min: 1, max: 5 },
+        },
+        Content: {
+            type: DataTypes.TEXT,
             allowNull: false,
         },
         Status: {
@@ -48,8 +59,8 @@ Order.init(
     },
     {
         sequelize: database,
-        tableName: "Orders",
+        tableName: "Reviews",
     }
 );
 
-export default Order;
+export default Review;

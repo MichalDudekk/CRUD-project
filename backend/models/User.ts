@@ -12,6 +12,7 @@ import database from "../database.js";
 import type ShippingDetail from "./ShippingDetail.js";
 import type CreditCardDetail from "./CreditCardDetail.js";
 import type Order from "./Order.js";
+import type Review from "./Review.js";
 
 // oficjalne zalecenia z dokumentacji Sequelize dla TypeScript
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -23,6 +24,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare shippingDetails?: NonAttribute<ShippingDetail[]>;
     declare creditCardDetails?: NonAttribute<CreditCardDetail[]>;
     declare orders?: NonAttribute<Order[]>;
+    declare reviews?: NonAttribute<Review[]>;
 }
 
 User.init(
@@ -49,7 +51,7 @@ User.init(
     },
     {
         sequelize: database,
-        tableName: "users",
+        tableName: "Users",
     }
 );
 

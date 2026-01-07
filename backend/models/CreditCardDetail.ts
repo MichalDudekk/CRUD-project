@@ -73,7 +73,7 @@ CreditCardDetail.init(
     },
     {
         sequelize: database,
-        tableName: "credit_card_details",
+        tableName: "CreditCardDetails",
     }
 );
 

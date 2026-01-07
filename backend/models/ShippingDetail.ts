@@ -71,7 +71,7 @@ ShippingDetail.init(
     },
     {
         sequelize: database,
-        tableName: "shipping_details",
+        tableName: "ShippingDetails",
     }
 );
 
