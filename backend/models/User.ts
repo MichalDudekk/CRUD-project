@@ -19,8 +19,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare UserID: CreationOptional<number>; // pole id nie jest wymagane podczas tworzenia Użytkownika
     declare Email: string;
     declare Password: string;
-    declare IsAdmin: boolean;
-    declare Session: string;
+    declare IsAdmin?: boolean;
+    declare Session?: string;
 
     declare shippingDetails?: NonAttribute<ShippingDetail[]>;
     declare creditCardDetails?: NonAttribute<CreditCardDetail[]>;
