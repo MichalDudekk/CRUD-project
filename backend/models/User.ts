@@ -1,38 +1,47 @@
-// model/User.ts
+// models/User.ts
 import {
     DataTypes,
     Model,
     type InferAttributes,
     type InferCreationAttributes,
     type CreationOptional,
+    type NonAttribute,
 } from "sequelize";
 import database from "../database.js";
 
+import type ShippingDetail from "./ShippingDetail.js";
+import type CreditCardDetail from "./CreditCardDetail.js";
+import type Order from "./Order.js";
+
 // oficjalne zalecenia z dokumentacji Sequelize dla TypeScript
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-    declare id: CreationOptional<number>; // pole id nie jest wymagane podczas tworzenia Użytkownika
-    declare email: string;
-    declare password: string;
-    declare isAdmin: boolean;
+    declare UserID: CreationOptional<number>; // pole id nie jest wymagane podczas tworzenia Użytkownika
+    declare Email: string;
+    declare Password: string;
+    declare IsAdmin: boolean;
+
+    declare shippingDetails?: NonAttribute<ShippingDetail[]>;
+    declare creditCardDetails?: NonAttribute<CreditCardDetail[]>;
+    declare orders?: NonAttribute<Order[]>;
 }
 
 User.init(
     {
-        id: {
+        UserID: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        email: {
+        Email: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
         },
-        password: {
+        Password: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        isAdmin: {
+        IsAdmin: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
