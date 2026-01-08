@@ -1,3 +1,4 @@
+// middleware/generateJWT
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET || "";
@@ -9,7 +10,7 @@ interface RefreshTokenPayload {
 
 const generateRefreshToken = (payload: RefreshTokenPayload) => {
     if (SECRET_KEY === "") {
-        return;
+        throw new Error("CRITICAL: JWT_SECRET is not defined!");
     }
 
     const token = jwt.sign(payload, SECRET_KEY, {
@@ -28,7 +29,7 @@ interface AuthTokenPayload {
 
 const generateAuthToken = (payload: AuthTokenPayload) => {
     if (SECRET_KEY === "") {
-        return;
+        throw new Error("CRITICAL: JWT_SECRET is not defined!");
     }
 
     const token = jwt.sign(payload, SECRET_KEY, {

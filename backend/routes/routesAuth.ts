@@ -1,4 +1,4 @@
-// routes/routesUser.ts
+// routes/routesAuth.ts
 import { Router, type Request, type Response } from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
@@ -7,6 +7,7 @@ import {
     generateAuthToken,
     generateRefreshToken,
 } from "../middleware/generateJWT.js";
+import authToken from "../middleware/authToken.js";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ interface LoginOrRegisterBody {
 
 // deafultowo ReqBody w Request jest ustawione na any
 router.post(
-    "/users/register",
+    "/auth/register",
     async (req: Request<{}, {}, LoginOrRegisterBody>, res: Response) => {
         const { email, password } = req.body;
 
@@ -43,6 +44,7 @@ router.post(
             const newUser = await User.create({
                 Email: email,
                 Password: hashedPassword,
+                IsAdmin: false,
             });
             res.status(201).json(newUser);
         } catch (error) {
@@ -52,7 +54,7 @@ router.post(
 );
 
 router.post(
-    "/users/login",
+    "/auth/login",
     async (req: Request<{}, {}, LoginOrRegisterBody>, res: Response) => {
         const { email, password } = req.body;
 
@@ -78,7 +80,7 @@ router.post(
                 Session: newSessionUUID,
             });
 
-            User.update(
+            await User.update(
                 { Session: newSessionUUID },
                 { where: { UserID: user.UserID } }
             );
@@ -91,12 +93,31 @@ router.post(
                 // sameSite: "Lax",
             });
 
-            res.status(201).json(refreshToken);
+            const authToken = generateAuthToken({
+                UserID: user.UserID,
+                Email: user.Email,
+                IsAdmin: user.IsAdmin,
+            });
+
+            res.cookie(`auth_token`, authToken, {
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === "production", // Secure tylko w produkcji
+                maxAge: 60000, // 1 hour
+                sameSite: "strict",
+                // sameSite: "Lax",
+            });
+
+            res.status(200).json({ message: "Loged in succesfully" });
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: "Failed to login" });
         }
     }
 );
+
+router.get("/test", authToken, async (req: Request, res: Response) => {
+    const users = await User.findAll();
+    res.status(200).json(users);
+});
 
 export default router;

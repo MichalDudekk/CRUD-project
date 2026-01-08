@@ -1,5 +1,5 @@
 ### Zarejestrowanie nowego uzytkownika
-POST http://localhost:3000/api/users/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -8,10 +8,13 @@ Content-Type: application/json
 }
 
 ### Zaloguj sie jako istniejacy uzytkownik
-POST http://localhost:3000/api/users/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "n2@gmail.com",
+    "email": "n1@gmail.com",
     "password": "123"
 }
+
+### Test
+GET http://localhost:3000/api/test

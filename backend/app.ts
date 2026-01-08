@@ -1,17 +1,19 @@
 // app.ts
 import { APP_PORT } from "./config/env.js";
 import express, { type Application } from "express";
+import cookieParser from "cookie-parser";
 
 import database from "./database.js";
 import "./models/index.js";
 
-import routesUsers from "./routes/routesUser.js";
+import routesAuth from "./routes/routesAuth.js";
 
 const app: Application = express();
 const port = APP_PORT;
 
+app.use(cookieParser());
 app.use(express.json()); // Middleware do parsowania JSON
-app.use("/api", routesUsers);
+app.use("/api", routesAuth);
 
 // Synchronizacja z bazą i start serwera
 database
