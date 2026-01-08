@@ -64,3 +64,23 @@ Content-Type: application/json
     "FirstName": "Jakub",
     "LastName": "Nowakowski"
 }
+
+### Pobierz karty użytkownika
+GET http://localhost:3000/api/users/credit-cards
+
+### Dodaj CreditCardDetail
+POST http://localhost:3000/api/users/credit-cards
+Content-Type: application/json
+
+{
+    "LastFourDigits": "1234",
+    "Token": "asdasdasdasdas",
+    "FirstName": "Michał",
+    "LastName": "Kowalczyk",
+    "CardBrand": "Visa",
+    "ExpiryMonth": "11",
+    "ExpiryYear": "29"
+}
+
+### Usuń karte użytkownika po CreditCardDetailsID
+DELETE http://localhost:3000/api/users/credit-cards/2
