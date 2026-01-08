@@ -11,12 +11,6 @@ import authToken from "../middleware/authToken.js";
 
 const router = Router();
 
-// Testowy endpoint: GET /api/users
-router.get("/users", async (req: Request, res: Response) => {
-    const users = await User.findAll();
-    res.status(200).json(users);
-});
-
 interface LoginOrRegisterBody {
     email: string;
     password: string;
@@ -102,22 +96,46 @@ router.post(
             res.cookie(`auth_token`, authToken, {
                 httpOnly: true,
                 // secure: process.env.NODE_ENV === "production", // Secure tylko w produkcji
-                maxAge: 60000, // 1 hour
+                maxAge: 60000, // 1 min
                 sameSite: "strict",
                 // sameSite: "Lax",
             });
 
-            res.status(200).json({ message: "Loged in succesfully" });
+            res.status(200).json({ message: "Logged in succesfully" });
         } catch (error) {
             console.log(error);
-            res.status(500).json({ error: "Failed to login" });
+            res.status(403).json({ error: "Failed to login" });
         }
     }
 );
 
-router.get("/test", authToken, async (req: Request, res: Response) => {
-    const users = await User.findAll();
-    res.status(200).json(users);
+router.post("/auth/logout", authToken, async (req: Request, res: Response) => {
+    const cookieOptions = {
+        httpOnly: true,
+        sameSite: "strict" as const, // Type Widening - zawęża typ string do typu "strict"
+        path: "/",
+    };
+
+    res.clearCookie("auth_token", cookieOptions);
+    res.clearCookie("refresh_token", cookieOptions);
+
+    const user = res.locals.user;
+
+    if (!user) {
+        console.log("user missing in locals");
+        return res.status(200).json({ error: "Logged out succesfully" });
+    }
+
+    try {
+        await User.update(
+            { Session: null },
+            { where: { UserID: user.UserID } }
+        );
+        res.status(200).json({ message: "Logged out succesfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server Error" });
+    }
 });
 
 export default router;

@@ -12,9 +12,12 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "n1@gmail.com",
+    "email": "n2@gmail.com",
     "password": "123"
 }
 
-### Test
-GET http://localhost:3000/api/test
+### Wyloguj się
+POST http://localhost:3000/api/auth/logout
+
+### Pobierz dane o aktualnej sesji
+GET http://localhost:3000/api/users/me

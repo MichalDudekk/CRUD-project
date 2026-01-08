@@ -20,7 +20,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare Email: string;
     declare Password: string;
     declare IsAdmin: boolean;
-    declare Session?: string;
+    declare Session?: string | null;
 
     declare shippingDetails?: NonAttribute<ShippingDetail[]>;
     declare creditCardDetails?: NonAttribute<CreditCardDetail[]>;

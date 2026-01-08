@@ -6,26 +6,19 @@ import { generateAuthToken } from "./generateJWT.js";
 
 const SECRET_KEY = process.env.JWT_SECRET || "";
 
-interface AuthRefreshTokenBody {
-    refreshToken?: string;
-}
-
 interface RefreshTokenPayload extends jwt.JwtPayload {
     UserID: number;
     Session: string;
 }
 
-const authToken = async (
-    // req: Request<{}, {}, AuthRefreshTokenBody>,
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const authToken = async (req: Request, res: Response, next: NextFunction) => {
     const authToken = req.cookies["auth_token"] || null;
 
     try {
         if (authToken !== null) {
-            jwt.verify(authToken, SECRET_KEY);
+            const decoded = jwt.verify(authToken, SECRET_KEY);
+            res.locals.user = decoded;
+
             console.log("authToken przeszedł");
             next();
             return;
@@ -37,7 +30,7 @@ const authToken = async (
 
     // auth_token wygasł lub nigdy nie istniał
 
-    const token = req.cookies["refresh_token"] || null; // req.body.refreshToken;
+    const token = req.cookies["refresh_token"] || null;
 
     if (!token) {
         return res.status(401).json({ error: "DEV: No refreshToken provided" });
@@ -53,11 +46,13 @@ const authToken = async (
         if (user.Session !== decoded.Session)
             throw new Error("DEV: Session params does not match");
 
-        const newAuthToken = generateAuthToken({
+        const payload = {
             UserID: user.UserID,
             Email: user.Email,
             IsAdmin: user.IsAdmin,
-        });
+        };
+
+        const newAuthToken = generateAuthToken(payload);
 
         res.cookie(`auth_token`, newAuthToken, {
             httpOnly: true,
@@ -66,6 +61,8 @@ const authToken = async (
             sameSite: "strict",
             // sameSite: "Lax",
         });
+
+        res.locals.user = payload;
 
         // Przekazanie żądania dalej
         next();

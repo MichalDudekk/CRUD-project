@@ -7,6 +7,7 @@ import database from "./database.js";
 import "./models/index.js";
 
 import routesAuth from "./routes/routesAuth.js";
+import routesUsers from "./routes/routesUsers.js";
 
 const app: Application = express();
 const port = APP_PORT;
@@ -14,6 +15,7 @@ const port = APP_PORT;
 app.use(cookieParser());
 app.use(express.json()); // Middleware do parsowania JSON
 app.use("/api", routesAuth);
+app.use("/api", routesUsers);
 
 // Synchronizacja z bazą i start serwera
 database
