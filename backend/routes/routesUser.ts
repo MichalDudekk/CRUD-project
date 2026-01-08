@@ -2,6 +2,11 @@
 import { Router, type Request, type Response } from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
+import {
+    generateAuthToken,
+    generateRefreshToken,
+} from "../middleware/generateJWT.js";
 
 const router = Router();
 
@@ -11,7 +16,7 @@ router.get("/users", async (req: Request, res: Response) => {
     res.status(200).json(users);
 });
 
-interface RegisterBody {
+interface LoginOrRegisterBody {
     email: string;
     password: string;
 }
@@ -19,7 +24,7 @@ interface RegisterBody {
 // deafultowo ReqBody w Request jest ustawione na any
 router.post(
     "/users/register",
-    async (req: Request<{}, {}, RegisterBody>, res: Response) => {
+    async (req: Request<{}, {}, LoginOrRegisterBody>, res: Response) => {
         const { email, password } = req.body;
 
         try {
@@ -42,6 +47,54 @@ router.post(
             res.status(201).json(newUser);
         } catch (error) {
             res.status(500).json({ error: "Failed to register" });
+        }
+    }
+);
+
+router.post(
+    "/users/login",
+    async (req: Request<{}, {}, LoginOrRegisterBody>, res: Response) => {
+        const { email, password } = req.body;
+
+        try {
+            const user = await User.findOne({
+                where: { Email: email },
+            });
+
+            if (user === null) {
+                res.status(404).json({
+                    error: "User not found",
+                });
+                return;
+            }
+
+            const passwordMatch = await bcrypt.compare(password, user.Password);
+            if (!passwordMatch) throw new Error("DEV: Invalid password");
+
+            const newSessionUUID = uuidv4();
+
+            const refreshToken = generateRefreshToken({
+                UserID: user.UserID,
+                Session: newSessionUUID,
+            });
+
+            User.update(
+                { Session: newSessionUUID },
+                { where: { UserID: user.UserID } }
+            );
+
+            res.cookie(`refresh_token`, refreshToken, {
+                httpOnly: true,
+                // secure: process.env.NODE_ENV === "production", // Secure tylko w produkcji
+                maxAge: 3600000, // 1 hour
+                sameSite: "strict",
+                // sameSite: "Lax",
+            });
+
+            res.status(201).json(refreshToken);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Failed to login" });
         }
     }
 );
