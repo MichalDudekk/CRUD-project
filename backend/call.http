@@ -12,7 +12,7 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "admin",
+    "email": "n1@gmail.com", 
     "password": "123"
 }
 
@@ -28,4 +28,39 @@ Content-Type: application/json
 
 {
     "Email": "admin"
+}
+
+### Dodaj ShippingDetail
+POST http://localhost:3000/api/users/shipping-details
+Content-Type: application/json
+
+{
+    "Country": "Polska", 
+    "City": "Warszawa",
+    "Street": "Złota 44",
+    "PostalCode": "32-213",
+    "Phone": "467-213-123",
+    "FirstName": "Jakub",
+    "LastName": "Nowakowski"
+}
+
+### Pobierz ShippingDetail
+GET http://localhost:3000/api/users/shipping-details
+
+### Usuń ShippingDetail po ShippingDetailID
+DELETE http://localhost:3000/api/users/shipping-details/1
+
+### Zmodyfikuj ShippingDetail po ShippingDetailID
+PATCH http://localhost:3000/api/users/shipping-details
+Content-Type: application/json
+
+{
+    "ShippingDetailID": 2,
+    "Country": "Niemcy", 
+    "City": "Warszawa",
+    "Street": "Złota 44",
+    "PostalCode": "32-213",
+    "Phone": "467-213-123",
+    "FirstName": "Jakub",
+    "LastName": "Nowakowski"
 }
