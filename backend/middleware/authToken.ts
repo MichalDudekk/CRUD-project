@@ -43,8 +43,10 @@ const authToken = async (req: Request, res: Response, next: NextFunction) => {
         if (user === null)
             throw new Error("DEV: user with UserID from token does not exist");
 
-        if (user.Session !== decoded.Session)
-            throw new Error("DEV: Session params does not match");
+        if (user.Session !== decoded.Session) {
+            console.log("DEV: Session params does not match");
+            return res.status(403).json({ error: "Access denied" });
+        }
 
         const payload = {
             UserID: user.UserID,

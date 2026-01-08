@@ -3,7 +3,7 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "n2@gmail.com",
+    "email": "admin",
     "password": "123"
 }
 
@@ -12,7 +12,7 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "n2@gmail.com",
+    "email": "admin",
     "password": "123"
 }
 
@@ -21,3 +21,11 @@ POST http://localhost:3000/api/auth/logout
 
 ### Pobierz dane o aktualnej sesji
 GET http://localhost:3000/api/users/me
+
+### Usuń sesje użytkownika o podanym emailu
+PATCH http://localhost:3000/api/users/RemoveSessionByEmail
+Content-Type: application/json
+
+{
+    "Email": "admin"
+}

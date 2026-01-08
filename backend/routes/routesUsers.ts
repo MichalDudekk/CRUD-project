@@ -25,4 +25,35 @@ router.get("/users/me", authToken, (req: Request, res: Response) => {
     });
 });
 
+interface RemoveSessionByEmailBody {
+    Email: string;
+}
+
+router.patch(
+    "/users/RemoveSessionByEmail",
+    authToken,
+    async (req: Request<{}, {}, RemoveSessionByEmailBody>, res: Response) => {
+        const user = res.locals.user;
+
+        if (!user) {
+            console.log("user missing in locals");
+            return res.status(500).json({ error: "Server Error" });
+        }
+
+        if (!user.IsAdmin) {
+            console.log("you need to be admin");
+            return res.status(403).json({ error: "Access denied" });
+        }
+
+        await User.update(
+            { Session: null },
+            { where: { Email: req.body.Email } }
+        );
+
+        res.status(200).json({
+            message: `Succesfully deleted ${req.body.Email} session`,
+        });
+    }
+);
+
 export default router;
