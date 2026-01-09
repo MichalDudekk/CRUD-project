@@ -134,3 +134,30 @@ Content-Type: application/json
     "CategoryName": "food",
     "Description": "implements eatable"
 }
+
+### Pobierz reviews po ProductID
+GET http://localhost:3000/api/products/reviews/1
+
+### Dodaj review po ProductID
+POST http://localhost:3000/api/products/reviews
+Content-Type: application/json
+
+{
+   "ProductID": 1,
+   "Rating": 3,
+   "Content": "Lorem Ipsum",
+   "Status": "Shown"
+}
+
+### Zmodyfikuj review
+PATCH http://localhost:3000/api/products/reviews
+Content-Type: application/json
+
+{
+   "ReviewID": 6,
+   "Rating": 4,
+   "Content": "Lorem Ipsum"
+}
+
+### Usuń review
+DELETE http://localhost:3000/api/products/reviews/4
