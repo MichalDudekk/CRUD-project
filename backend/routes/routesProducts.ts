@@ -3,7 +3,6 @@ import { Router, type Request, type Response } from "express";
 import { Op, type WhereOptions } from "sequelize";
 import authToken from "../middleware/authToken.js";
 import { User, Review, Product, Category } from "../models/index.js";
-import { error } from "console";
 
 const router = Router();
 

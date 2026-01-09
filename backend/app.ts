@@ -9,6 +9,7 @@ import "./models/index.js";
 import routesAuth from "./routes/routesAuth.js";
 import routesUsers from "./routes/routesUsers.js";
 import routesProducts from "./routes/routesProducts.js";
+import routesOrders from "./routes/routesOrders.js";
 
 const app: Application = express();
 const port = APP_PORT;
@@ -18,6 +19,7 @@ app.use(express.json()); // Middleware do parsowania JSON
 app.use("/api", routesAuth);
 app.use("/api", routesUsers);
 app.use("/api", routesProducts);
+app.use("/api", routesOrders);
 
 // Synchronizacja z bazą i start serwera
 database
