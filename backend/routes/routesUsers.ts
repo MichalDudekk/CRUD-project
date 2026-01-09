@@ -2,7 +2,6 @@
 import { Router, type Request, type Response } from "express";
 import authToken from "../middleware/authToken.js";
 import { User, ShippingDetail, CreditCardDetail } from "../models/index.js";
-import type { Interface } from "node:readline";
 
 const router = Router();
 

@@ -12,7 +12,7 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "n1@gmail.com", 
+    "email": "admin", 
     "password": "123"
 }
 
@@ -84,3 +84,37 @@ Content-Type: application/json
 
 ### Usuń karte użytkownika po CreditCardDetailsID
 DELETE http://localhost:3000/api/users/credit-cards/2
+
+######################################
+
+### Pobierz wszystkie produkty
+GET http://localhost:3000/api/products
+
+### Pobierz produkt po ProductID
+GET http://localhost:3000/api/products/1
+
+### Pobierz produkty po SearchPhase
+GET http://localhost:3000/api/products/search/asdas
+
+### Pobierz produkty po CategoryID
+GET http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "CategoryID": 1
+}
+
+### Dodaj produkt
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "CategoryID": 1,
+    "Name": "Poduct1",
+    "UnitPrice": 100.00,
+    "Description": "No desc",
+    "Functionality": "No desc",
+    "PhotoPath": "/asdasd.com",
+    "UnitsInStock": 20,
+    "Discontinued": false
+}

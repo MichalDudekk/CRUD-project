@@ -20,6 +20,7 @@ class Product extends Model<
     declare ProductID: CreationOptional<number>;
     declare CategoryID: ForeignKey<Category["CategoryID"]>;
 
+    declare Name: string;
     declare UnitPrice: number;
     declare Description: string;
     declare Functionality: string;
@@ -41,6 +42,10 @@ Product.init(
         },
         CategoryID: {
             type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        Name: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         UnitPrice: {
