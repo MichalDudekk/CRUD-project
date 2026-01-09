@@ -3,7 +3,7 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "admin",
+    "email": "noadmin",
     "password": "123"
 }
 
@@ -94,15 +94,13 @@ GET http://localhost:3000/api/products
 GET http://localhost:3000/api/products/1
 
 ### Pobierz produkty po SearchPhase
-GET http://localhost:3000/api/products/search/asdas
+GET http://localhost:3000/api/products/search/duct
 
 ### Pobierz produkty po CategoryID
-GET http://localhost:3000/api/products
-Content-Type: application/json
+GET http://localhost:3000/api/products/categories/1
 
-{
-    "CategoryID": 1
-}
+### Pobierz produkty po SearchPhase i po CategoryID
+GET http://localhost:3000/api/products/search?SearchPhase=o&CategoryID=1
 
 ### Dodaj produkt
 POST http://localhost:3000/api/products
@@ -117,4 +115,22 @@ Content-Type: application/json
     "PhotoPath": "/asdasd.com",
     "UnitsInStock": 20,
     "Discontinued": false
+}
+
+### Toggle discontinued by ProductID
+PATCH http://localhost:3000/api/products/toggle-discontinued/1
+
+### Pobierz wszystkie kategorie
+GET http://localhost:3000/api/categories
+
+### Pobierz kategorie po CategoryID
+GET http://localhost:3000/api/categories/1
+
+### Dodaj kategorie
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "CategoryName": "food",
+    "Description": "implements eatable"
 }

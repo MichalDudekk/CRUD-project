@@ -30,6 +30,7 @@ Category.init(
         CategoryName: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
         Description: {
             type: DataTypes.TEXT,

@@ -1,6 +1,6 @@
 // routes/routesProducts.ts
 import { Router, type Request, type Response } from "express";
-import { Op } from "sequelize";
+import { Op, type WhereOptions } from "sequelize";
 import authToken from "../middleware/authToken.js";
 import { User, Review, Product, Category } from "../models/index.js";
 
@@ -10,6 +10,31 @@ router.get("/products", async (req: Request, res: Response) => {
     const products = await Product.findAll();
     return res.status(200).json(products);
 });
+
+interface SearchQuery {
+    SearchPhase?: string;
+    CategoryID?: string;
+}
+
+router.get(
+    "/products/search",
+    async (req: Request<{}, {}, {}, SearchQuery>, res: Response) => {
+        const { SearchPhase, CategoryID } = req.query;
+        const whereClause: WhereOptions = {};
+
+        if (SearchPhase) whereClause.Name = { [Op.like]: `%${SearchPhase}%` };
+
+        if (CategoryID) whereClause.CategoryID = Number(CategoryID);
+
+        console.log(whereClause);
+
+        const products = await Product.findAll({
+            where: whereClause,
+        });
+
+        res.status(200).json(products);
+    }
+);
 
 router.get("/products/:ProductID", async (req: Request, res: Response) => {
     const product = await Product.findByPk(req.params.ProductID);
@@ -34,16 +59,12 @@ router.get(
     }
 );
 
-interface ProductsByCategoryBody {
-    CategoryID: number;
-}
-
 router.get(
-    "/products",
-    async (req: Request<{}, {}, ProductsByCategoryBody>, res: Response) => {
+    "/products/categories/:CategoryID",
+    async (req: Request, res: Response) => {
         const products = await Product.findAll({
             where: {
-                CategoryID: req.body.CategoryID,
+                CategoryID: req.params.CategoryID,
             },
         });
 
@@ -142,6 +163,69 @@ router.post(
 
         res.status(201).json({
             message: `Succesfully created product ${req.body.Name}`,
+        });
+    }
+);
+
+// Categories
+
+router.get("/categories", async (req: Request, res: Response) => {
+    const categories = await Category.findAll();
+    return res.status(200).json(categories);
+});
+
+router.get("/categories/:CategoryID", async (req: Request, res: Response) => {
+    const categorie = await Category.findByPk(req.params.CategoryID);
+
+    if (!categorie)
+        return res.status(404).json({ message: "Category not found" });
+
+    res.status(200).json(categorie);
+});
+
+interface CreateCategoryBody {
+    CategoryName: string;
+    Description: string;
+}
+
+router.post(
+    "/categories",
+    authToken,
+    async (req: Request<{}, {}, CreateCategoryBody>, res: Response) => {
+        const user = res.locals.user;
+
+        if (!user) {
+            console.log("user missing in locals");
+            return res.status(500).json({ error: "Server Error" });
+        }
+
+        if (!user.IsAdmin) {
+            console.log("you need to be admin");
+            return res.status(403).json({ error: "Access denied" });
+        }
+
+        try {
+            const { CategoryName, Description } = req.body;
+
+            const category = await Category.findOne({
+                where: { CategoryName: CategoryName },
+            });
+            if (category)
+                return res
+                    .status(400)
+                    .json({ error: "Given Category already exist" });
+
+            await Category.create({
+                CategoryName,
+                Description,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Server Error" });
+        }
+
+        res.status(201).json({
+            message: `Succesfully created category ${req.body.CategoryName}`,
         });
     }
 );
