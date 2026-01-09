@@ -161,3 +161,24 @@ Content-Type: application/json
 
 ### Usuń review
 DELETE http://localhost:3000/api/products/reviews/4
+
+#######################
+
+### Pobierz zamówienia po UserID
+GET http://localhost:3000/api/orders
+
+### Pobierz OrderDetails po OrderID
+GET http://localhost:3000/api/orders/details/1
+
+### Dodaj Order 
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+
+{
+    "OrderDetails": [
+        {
+            "ProductID": 1,
+            "Quantity": 1
+        }
+    ]
+}
