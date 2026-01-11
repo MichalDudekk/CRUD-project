@@ -21,6 +21,7 @@ class Order extends Model<
     declare UserID: ForeignKey<User["UserID"]>;
     declare OrderDate: Date;
     declare Status: string;
+    declare TotalCost: number;
 
     declare user?: NonAttribute<User>;
     declare orderDetails?: NonAttribute<OrderDetail[]>;
@@ -43,6 +44,10 @@ Order.init(
         },
         Status: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        TotalCost: {
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
     },

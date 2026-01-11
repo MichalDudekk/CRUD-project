@@ -2,6 +2,7 @@
 import { Router, type Request, type Response } from "express";
 import authToken from "../middleware/authToken.js";
 import { User, ShippingDetail, CreditCardDetail } from "../models/index.js";
+// import { type ParamsDictionary } from "express-serve-static-core";
 
 const router = Router();
 
@@ -162,6 +163,10 @@ router.delete(
     }
 );
 
+// interface ShippingDetailParams extends ParamsDictionary {
+//     ShippingDetailID: string;
+// }
+
 // DO EDITA
 router.patch(
     "/users/shipping-details", // /:id
@@ -177,6 +182,7 @@ router.patch(
         try {
             const target = await ShippingDetail.findByPk(
                 req.body.ShippingDetailID
+                // req.params.ShippingDetailID
             );
 
             if (!target)

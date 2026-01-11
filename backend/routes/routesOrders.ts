@@ -48,9 +48,12 @@ router.post(
                     UserID: user.UserID,
                     OrderDate: new Date(),
                     Status: "Planned",
+                    TotalCost: 0, // will be updated later
                 },
                 { transaction: t }
             );
+
+            let orderTotalCost = 0;
 
             for (const { ProductID, Quantity } of req.body.OrderDetails) {
                 const product = await Product.findByPk(ProductID, {
@@ -75,7 +78,7 @@ router.post(
                     { transaction: t }
                 );
 
-                await OrderDetail.create(
+                const newOrderDetail = await OrderDetail.create(
                     {
                         ProductID,
                         OrderID: order.OrderID,
@@ -85,7 +88,19 @@ router.post(
                     },
                     { transaction: t }
                 );
+
+                orderTotalCost +=
+                    newOrderDetail.UnitPrice *
+                    newOrderDetail.Quantity *
+                    (1 - newOrderDetail.Discount);
             }
+
+            await order.update(
+                { TotalCost: orderTotalCost },
+                { transaction: t }
+            );
+
+            // Logika płatności
 
             await t.commit();
             return res
