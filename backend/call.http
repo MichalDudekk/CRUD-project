@@ -1,0 +1,188 @@
+### Zarejestrowanie nowego uzytkownika
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "admin",
+    "password": "123"
+}
+
+### Zaloguj sie jako istniejacy uzytkownik
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin", 
+    "password": "123"
+}
+
+### Wyloguj się
+POST http://localhost:3000/api/auth/logout
+
+### Pobierz dane o aktualnej sesji
+GET http://localhost:3000/api/users/me
+
+### Usuń sesje użytkownika o podanym emailu
+PATCH http://localhost:3000/api/users/RemoveSessionByEmail
+Content-Type: application/json
+
+{
+    "Email": "admin"
+}
+
+### Dodaj ShippingDetail
+POST http://localhost:3000/api/users/shipping-details
+Content-Type: application/json
+
+{
+    "Country": "Polska", 
+    "City": "Warszawa",
+    "Street": "Złota 44",
+    "PostalCode": "32-213",
+    "Phone": "467-213-123",
+    "FirstName": "Jakub",
+    "LastName": "Nowakowski"
+}
+
+### Pobierz ShippingDetail
+GET http://localhost:3000/api/users/shipping-details
+
+### Usuń ShippingDetail po ShippingDetailID
+DELETE http://localhost:3000/api/users/shipping-details/1
+
+### Zmodyfikuj ShippingDetail po ShippingDetailID
+PATCH http://localhost:3000/api/users/shipping-details
+Content-Type: application/json
+
+{
+    "ShippingDetailID": 2,
+    "Country": "Niemcy", 
+    "City": "Warszawa",
+    "Street": "Złota 44",
+    "PostalCode": "32-213",
+    "Phone": "467-213-123",
+    "FirstName": "Jakub",
+    "LastName": "Nowakowski"
+}
+
+### Pobierz karty użytkownika
+GET http://localhost:3000/api/users/credit-cards
+
+### Dodaj CreditCardDetail
+POST http://localhost:3000/api/users/credit-cards
+Content-Type: application/json
+
+{
+    "LastFourDigits": "1234",
+    "Token": "asdasdasdasdas",
+    "FirstName": "Michał",
+    "LastName": "Kowalczyk",
+    "CardBrand": "Visa",
+    "ExpiryMonth": "11",
+    "ExpiryYear": "29"
+}
+
+### Usuń karte użytkownika po CreditCardDetailsID
+DELETE http://localhost:3000/api/users/credit-cards/2
+
+######################################
+
+### Pobierz wszystkie produkty
+GET http://localhost:3000/api/products
+
+### Pobierz produkt po ProductID
+GET http://localhost:3000/api/products/1
+
+### Pobierz produkty po SearchPhase
+GET http://localhost:3000/api/products/search/duct
+
+### Pobierz produkty po CategoryID
+GET http://localhost:3000/api/products/categories/1
+
+### Pobierz produkty po SearchPhase i po CategoryID
+GET http://localhost:3000/api/products/search?SearchPhase=o&CategoryID=1
+
+### Dodaj produkt
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "CategoryID": 2,
+    "Name": "Poduct2",
+    "UnitPrice": 200.00,
+    "Description": "No desc",
+    "Functionality": "No desc",
+    "PhotoPath": "/asdasd.com",
+    "UnitsInStock": 20,
+    "Discontinued": false
+}
+
+### Toggle discontinued by ProductID
+PATCH http://localhost:3000/api/products/toggle-discontinued/1
+
+### Pobierz wszystkie kategorie
+GET http://localhost:3000/api/categories
+
+### Pobierz kategorie po CategoryID
+GET http://localhost:3000/api/categories/1
+
+### Dodaj kategorie
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "CategoryName": "not food",
+    "Description": "implements uneatable"
+}
+
+### Pobierz reviews po ProductID
+GET http://localhost:3000/api/products/reviews/1
+
+### Dodaj review po ProductID
+POST http://localhost:3000/api/products/reviews
+Content-Type: application/json
+
+{
+   "ProductID": 1,
+   "Rating": 3,
+   "Content": "Lorem Ipsum",
+   "Status": "Shown"
+}
+
+### Zmodyfikuj review
+PATCH http://localhost:3000/api/products/reviews
+Content-Type: application/json
+
+{
+   "ReviewID": 1,
+   "Rating": 4,
+   "Content": "Lorem Ipsum"
+}
+
+### Usuń review
+DELETE http://localhost:3000/api/products/reviews/1
+
+#######################
+
+### Pobierz zamówienia po UserID
+GET http://localhost:3000/api/orders
+
+### Pobierz OrderDetails po OrderID
+GET http://localhost:3000/api/orders/details/2
+
+### Dodaj Order 
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+
+{
+    "OrderDetails": [
+        {
+            "ProductID": 1,
+            "Quantity": 1
+        },
+        {
+            "ProductID": 4,
+            "Quantity": 2
+        }
+    ]
+}
