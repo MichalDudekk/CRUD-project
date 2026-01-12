@@ -1,7 +1,7 @@
 // src/App.tsx
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AuthService } from "./services/auth";
 import {
     Home,
@@ -13,6 +13,8 @@ import {
     Cart,
 } from "./pages/index";
 import type { User, CreateOrderPayload } from "./types";
+import { Navbar } from "./components/navbar";
+import { Footer } from "./components/footer";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -51,21 +53,8 @@ function App() {
     if (isLoading) return null;
 
     return (
-        <>
-            <nav className="mb-4 gap-4 flex">
-                <Link to="/" className="text-blue-500">
-                    Adagio
-                </Link>
-                {user === null ? (
-                    <Link to="/login" className="text-blue-500">
-                        Login
-                    </Link>
-                ) : (
-                    <Link to="/account" className="text-red-500">
-                        Account
-                    </Link>
-                )}
-            </nav>
+        <div className="min-h-screen flex flex-col">
+            <Navbar user={user} />
 
             <div className="ml-1 mr-1 sm:ml-[10%] sm:mr-[10%] ">
                 <Routes>
@@ -108,7 +97,9 @@ function App() {
                     <Route path="*" element={<Error404 />} />
                 </Routes>
             </div>
-        </>
+
+            <Footer />
+        </div>
     );
 }
 

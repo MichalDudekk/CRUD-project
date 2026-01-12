@@ -17,7 +17,7 @@ export const Home = () => {
 
             const newData = await ProductsService.search(search);
             setData(newData);
-            console.log(newData);
+            console.log("fetching products", newData);
         };
         fetch();
     }, [searchPhase, categoryID]);
