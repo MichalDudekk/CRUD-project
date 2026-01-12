@@ -3,7 +3,14 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { AuthService } from "./services/auth";
-import { Home, Login, Register, Error404, Account } from "./pages/index";
+import {
+    Home,
+    Login,
+    Register,
+    Error404,
+    Account,
+    ProductDetailsPage,
+} from "./pages/index";
 import type { User } from "./types";
 
 function App() {
@@ -63,6 +70,16 @@ function App() {
                         path="/account"
                         element={
                             <Account user={user} refreshUser={refreshUser} />
+                        }
+                    />
+
+                    <Route
+                        path="/products/:productId"
+                        element={
+                            <ProductDetailsPage
+                                user={user}
+                                refreshUser={refreshUser}
+                            />
                         }
                     />
 

@@ -2,6 +2,7 @@
 pg_data/
 
 backend/node_modules
+backend/call.http
 
 frontend/node_modules
 frontend/src/assets/*
