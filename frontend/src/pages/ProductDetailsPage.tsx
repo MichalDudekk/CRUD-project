@@ -95,9 +95,34 @@ export const ProductDetailsPage = ({
         console.log(`Dodano do koszyka: ${product.Name}, Ilość: ${quantity}`);
 
         setCart((prev) => {
-            const details = prev.OrderDetails.concat([
-                { ProductID: product.ProductID, Quantity: quantity },
-            ]);
+            const details: {
+                ProductID: number;
+                Quantity: number;
+            }[] = [];
+
+            let isUnique = true;
+
+            for (const detail of prev.OrderDetails) {
+                if (detail.ProductID === product.ProductID) {
+                    detail.Quantity += quantity;
+                    detail.Quantity = Math.min(
+                        detail.Quantity,
+                        product.UnitsInStock
+                    );
+                    isUnique = false;
+                }
+                details.push(detail);
+            }
+
+            if (isUnique)
+                details.push({
+                    ProductID: product.ProductID,
+                    Quantity: quantity,
+                });
+
+            // const details = prev.OrderDetails.concat([
+            //     { ProductID: product.ProductID, Quantity: quantity },
+            // ]);
             const newCart: CreateOrderPayload = { OrderDetails: details };
             return newCart;
         });
