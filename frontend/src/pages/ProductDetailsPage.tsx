@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ProductsService } from "../services/products";
-import type { Product, Review, User } from "../types";
+import type { Product, Review, User, CreateOrderPayload } from "../types";
+import { type SetStateAction, type Dispatch } from "react";
 import {
     ShoppingCart,
     Star,
@@ -28,9 +29,12 @@ import { Textarea } from "@/components/ui/textarea";
 
 export const ProductDetailsPage = ({
     user,
+    refreshUser,
+    setCart,
 }: {
     user: User | null;
     refreshUser: () => Promise<void>;
+    setCart: Dispatch<SetStateAction<CreateOrderPayload>>;
 }) => {
     const { productId } = useParams<{ productId: string }>();
     const navigate = useNavigate();
@@ -89,6 +93,14 @@ export const ProductDetailsPage = ({
     const handleAddToCart = () => {
         if (!product) return;
         console.log(`Dodano do koszyka: ${product.Name}, Ilość: ${quantity}`);
+
+        setCart((prev) => {
+            const details = prev.OrderDetails.concat([
+                { ProductID: product.ProductID, Quantity: quantity },
+            ]);
+            const newCart: CreateOrderPayload = { OrderDetails: details };
+            return newCart;
+        });
     };
 
     const handleReviewAdded = () => {

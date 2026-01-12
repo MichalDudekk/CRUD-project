@@ -10,12 +10,19 @@ import {
     Error404,
     Account,
     ProductDetailsPage,
+    Cart,
 } from "./pages/index";
-import type { User } from "./types";
+import type { User, CreateOrderPayload } from "./types";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [cart, setCart] = useState<CreateOrderPayload>(() => {
+        // localStorage.clear();
+        const storedCart = localStorage.getItem("shopping-cart");
+        return storedCart ? JSON.parse(storedCart) : { OrderDetails: [] };
+    });
 
     const refreshUser = async () => {
         console.log("fetching user");
@@ -27,6 +34,11 @@ function App() {
             setUser(null);
         }
     };
+
+    useEffect(() => {
+        console.log("Saving cart to local storage:", cart);
+        localStorage.setItem("shopping-cart", JSON.stringify(cart));
+    }, [cart]);
 
     useEffect(() => {
         const refresh = async () => {
@@ -79,6 +91,19 @@ function App() {
                             <ProductDetailsPage
                                 user={user}
                                 refreshUser={refreshUser}
+                                setCart={setCart}
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/cart"
+                        element={
+                            <Cart
+                                user={user}
+                                refreshUser={refreshUser}
+                                cart={cart}
+                                setCart={setCart}
                             />
                         }
                     />
