@@ -11,6 +11,8 @@ import {
     XCircle,
     Minus,
     Plus,
+    Loader2,
+    Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 
 export const ProductDetailsPage = ({
     user,
@@ -25,7 +28,7 @@ export const ProductDetailsPage = ({
     user: User | null;
     refreshUser: () => Promise<void>;
 }) => {
-    const { productId } = useParams<{ productId: string }>(); // pobvranie id z url
+    const { productId } = useParams<{ productId: string }>();
     const navigate = useNavigate();
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -34,30 +37,38 @@ export const ProductDetailsPage = ({
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!productId) return;
-            try {
-                setLoading(true);
-                const id = Number(productId);
+    const [isWritingReview, setIsWritingReview] = useState(false);
 
-                const productData = await ProductsService.getById(id);
-                setProduct(productData);
+    const fetchData = async () => {
+        if (!productId) return;
+        try {
+            const id = Number(productId);
 
-                const [reviewsData, categoryData] = await Promise.all([
-                    ProductsService.getReviews(id),
-                    ProductsService.getCategoryById(productData.CategoryID),
-                ]); // optymalizacja
-
+            if (product) {
+                const reviewsData = await ProductsService.getReviews(id);
                 setReviews(reviewsData);
-                setCategoryName(categoryData.CategoryName);
-            } catch (err) {
-                console.error("Błąd podczas pobierania danych:", err);
-            } finally {
-                setLoading(false);
+                return;
             }
-        };
 
+            setLoading(true);
+            const productData = await ProductsService.getById(id);
+            setProduct(productData);
+
+            const [reviewsData, categoryData] = await Promise.all([
+                ProductsService.getReviews(id),
+                ProductsService.getCategoryById(productData.CategoryID),
+            ]);
+
+            setReviews(reviewsData);
+            setCategoryName(categoryData.CategoryName);
+        } catch (err) {
+            console.error("Błąd:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, [productId]);
 
@@ -74,6 +85,11 @@ export const ProductDetailsPage = ({
     const handleAddToCart = () => {
         if (!product) return;
         console.log(`Dodano do koszyka: ${product.Name}, Ilość: ${quantity}`);
+    };
+
+    const handleReviewAdded = () => {
+        setIsWritingReview(false);
+        fetchData(); // Odśwież opinie po dodaniu
     };
 
     // --- LOADING STATE ---
@@ -103,7 +119,6 @@ export const ProductDetailsPage = ({
               ).toFixed(1)
             : "Brak ocen";
 
-    // Internationalization API
     const formattedPrice = new Intl.NumberFormat("pl-PL", {
         style: "currency",
         currency: "PLN",
@@ -120,6 +135,7 @@ export const ProductDetailsPage = ({
             </Button>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                {/* ... (SEKCJA ZDJĘCIA I DETALI BEZ ZMIAN) ... */}
                 <div className="relative aspect-square overflow-hidden rounded-xl border bg-muted flex items-center justify-center">
                     {product.PhotoPath ? (
                         <img
@@ -234,7 +250,6 @@ export const ProductDetailsPage = ({
                                 chwilowo niedostępny
                             </Button>
                         )}
-
                         <div className="mt-4 flex items-center text-sm text-muted-foreground">
                             {product.UnitsInStock > 0 ? (
                                 <>
@@ -254,10 +269,28 @@ export const ProductDetailsPage = ({
                 </div>
             </div>
 
+            {/* --- SEKCJA OPINII --- */}
             <div className="mt-16">
-                <h2 className="text-3xl font-bold mb-8">Opinie klientów</h2>
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-3xl font-bold">Opinie klientów</h2>
+                    {user && !isWritingReview && (
+                        <Button onClick={() => setIsWritingReview(true)}>
+                            Dodaj nową opinię
+                        </Button>
+                    )}
+                </div>
 
-                {reviews.length === 0 ? (
+                {isWritingReview && (
+                    <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <ReviewForm
+                            productId={product.ProductID}
+                            onCancel={() => setIsWritingReview(false)}
+                            onSuccess={handleReviewAdded}
+                        />
+                    </div>
+                )}
+
+                {reviews.length === 0 && !isWritingReview ? (
                     <Card className="bg-muted/30 border-dashed max-w-2xl mx-auto">
                         <CardContent className="flex flex-col items-center justify-center p-12 text-center">
                             <Star className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
@@ -268,13 +301,18 @@ export const ProductDetailsPage = ({
                                 Nikt jeszcze nie ocenił tego produktu. Jeśli go
                                 kupiłeś, podziel się swoją opinią!
                             </p>
-                            {user && (
+                            {user ? (
                                 <Button
                                     variant="outline"
                                     className="mt-6 cursor-pointer"
+                                    onClick={() => setIsWritingReview(true)}
                                 >
                                     Napisz pierwszą opinię
                                 </Button>
+                            ) : (
+                                <p className="text-sm text-muted-foreground mt-4 italic">
+                                    Zaloguj się, aby dodać opinię.
+                                </p>
                             )}
                         </CardContent>
                     </Card>
@@ -289,6 +327,117 @@ export const ProductDetailsPage = ({
         </div>
     );
 };
+
+// --- KOMPONENT FORMULARZA ---
+function ReviewForm({
+    productId,
+    onCancel,
+    onSuccess,
+}: {
+    productId: number;
+    onCancel: () => void;
+    onSuccess: () => void;
+}) {
+    const [rating, setRating] = useState(5);
+    const [content, setContent] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!content.trim()) return;
+
+        setIsSubmitting(true);
+        try {
+            await ProductsService.createReview({
+                ProductID: productId,
+                Rating: rating,
+                Content: content,
+                Status: "Shown",
+            });
+            onSuccess();
+        } catch (error) {
+            console.error("Błąd dodawania opinii:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <Card className="h-full border-primary/50 shadow-md relative overflow-hidden">
+            {/* Pasek postępu (opcjonalny bajer) */}
+            {isSubmitting && (
+                <div className="absolute top-0 left-0 w-full h-1 bg-primary animate-pulse" />
+            )}
+
+            <CardContent className="p-6 flex flex-col h-full gap-4">
+                <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-3">
+                        {/* Placeholder avatara */}
+                        <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
+                            Ty
+                        </div>
+                        <div>
+                            <span className="font-semibold text-sm block">
+                                Twoja opinia
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                                Podziel się wrażeniami
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex bg-yellow-500/10 px-2 py-1 rounded-full cursor-pointer hover:bg-yellow-500/20 transition-colors">
+                        {Array.from({ length: 5 }).map((_, i) => {
+                            const starValue = i + 1;
+                            return (
+                                <Star
+                                    key={i}
+                                    onClick={() => setRating(starValue)}
+                                    className={`w-5 h-5 cursor-pointer transition-all hover:scale-110 ${
+                                        starValue <= rating
+                                            ? "fill-yellow-500 text-yellow-500"
+                                            : "text-muted-foreground/30 hover:text-yellow-500/50"
+                                    }`}
+                                />
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div className="flex-1 relative">
+                    <Textarea
+                        placeholder="Napisz co myślisz o tym produkcie..."
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="min-h-25 text-sm resize-none border-l-2 border-l-primary/50 pl-4 border-t-0 border-r-0 border-b-0 rounded-none focus-visible:ring-0 px-4 bg-transparent italic"
+                    />
+                </div>
+
+                <div className="flex justify-end gap-2 mt-2">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={onCancel}
+                        disabled={isSubmitting}
+                    >
+                        Anuluj
+                    </Button>
+                    <Button
+                        size="sm"
+                        onClick={handleSubmit}
+                        disabled={isSubmitting || !content.trim()}
+                    >
+                        {isSubmitting ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Send className="mr-2 h-3 w-3" />
+                        )}
+                        Dodaj opinię
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
 
 function ReviewItem({ review }: { review: Review }) {
     return (
