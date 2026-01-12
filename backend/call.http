@@ -3,7 +3,7 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "admin",
+    "email": "noadmin",
     "password": "123"
 }
 
@@ -27,7 +27,7 @@ PATCH http://localhost:3000/api/users/RemoveSessionByEmail
 Content-Type: application/json
 
 {
-    "Email": "admin"
+    "Email": "noadmin"
 }
 
 ### Dodaj ShippingDetail
@@ -100,7 +100,8 @@ GET http://localhost:3000/api/products/search/duct
 GET http://localhost:3000/api/products/categories/1
 
 ### Pobierz produkty po SearchPhase i po CategoryID
-GET http://localhost:3000/api/products/search?SearchPhase=o&CategoryID=1
+# GET http://localhost:3000/api/products/search?SearchPhase=o&CategoryID=1
+GET http://localhost:3000/api/products/search?SearchPhase=od
 
 ### Dodaj produkt
 POST http://localhost:3000/api/products
@@ -108,8 +109,8 @@ Content-Type: application/json
 
 {
     "CategoryID": 2,
-    "Name": "Poduct2",
-    "UnitPrice": 200.00,
+    "Name": "Krzesło",
+    "UnitPrice": 269.99,
     "Description": "No desc",
     "Functionality": "No desc",
     "PhotoPath": "/asdasd.com",

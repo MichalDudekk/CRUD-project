@@ -2,6 +2,7 @@
 import { APP_PORT } from "./config/env.js";
 import express, { type Application } from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import database from "./database.js";
 import "./models/index.js";
@@ -13,6 +14,13 @@ import routesOrders from "./routes/routesOrders.js";
 
 const app: Application = express();
 const port = APP_PORT;
+
+app.use(
+    cors({
+        origin: "http://localhost:5173", // adres frontendu
+        credentials: true, // pozwala na przesyłanie httpOnlyCookie
+    })
+);
 
 app.use(cookieParser());
 app.use(express.json()); // Middleware do parsowania JSON
