@@ -40,7 +40,9 @@ router.post(
                 Password: hashedPassword,
                 IsAdmin: false,
             });
-            res.status(201).json(newUser);
+            res.status(201).json({
+                message: "Successfully created a new account",
+            });
         } catch (error) {
             res.status(500).json({ error: "Failed to register" });
         }

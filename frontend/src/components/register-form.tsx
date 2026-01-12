@@ -17,15 +17,15 @@ import { Input } from "@/components/ui/input";
 
 import { Link } from "react-router-dom";
 
-interface LoginFormProps extends React.ComponentProps<"div"> {
+interface RegisterFormProps extends React.ComponentProps<"div"> {
     onFormSubmit?: (data: FormData) => void;
 }
 
-export function LoginForm({
+export function RegisterForm({
     className,
     onFormSubmit,
     ...props
-}: LoginFormProps) {
+}: RegisterFormProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -39,9 +39,9 @@ export function LoginForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Login to your account</CardTitle>
+                    <CardTitle>Sign in your account</CardTitle>
                     <CardDescription>
-                        Enter your email below to login to your account
+                        Enter your email below to sign in your account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -63,12 +63,6 @@ export function LoginForm({
                                     <FieldLabel htmlFor="password">
                                         Password
                                     </FieldLabel>
-                                    <a
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </a>
                                 </div>
                                 <Input
                                     id="password"
@@ -78,11 +72,11 @@ export function LoginForm({
                                 />
                             </Field>
                             <Field>
-                                <Button type="submit">Login</Button>
+                                <Button type="submit">Sign In</Button>
                                 <FieldDescription className="text-center">
-                                    Don&apos;t have an account?{" "}
-                                    <Link to="/register" className="underline">
-                                        Sign up
+                                    Already have an account?{" "}
+                                    <Link to="/login" className="underline">
+                                        Log in
                                     </Link>
                                 </FieldDescription>
                             </Field>
