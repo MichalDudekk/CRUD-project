@@ -17,7 +17,7 @@ export const Account = ({
         if (user === null) {
             navigate("/");
         }
-    }, []);
+    }, [user, navigate]);
 
     if (user === null) return null;
 

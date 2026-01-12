@@ -1,5 +1,6 @@
 import api from "./api";
 import type {
+    Category,
     Product,
     // CreateProductPayload,
     ProductSearchParams,
@@ -32,6 +33,16 @@ export const ProductsService = {
         const response = await api.get<Review[]>(
             `/products/reviews/${productId}`
         );
+        return response.data;
+    },
+
+    // getCategoryById: async (id: number) => {
+    //     const response = await api.get<Category>(`/products/categories/${id}`);
+    //     return response.data;
+    // },
+
+    getCategories: async () => {
+        const response = await api.get<Category[]>(`/categories`);
         return response.data;
     },
 };
