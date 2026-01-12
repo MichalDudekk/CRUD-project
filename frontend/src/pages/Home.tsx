@@ -1,17 +1,11 @@
 // src/pages/Home.tsx
-import { AuthService, ProductsService } from "@/services";
-import { type Product, type User, type ProductSearchParams } from "@/types";
+import { ProductsService } from "@/services";
+import { type Product, type ProductSearchParams } from "@/types";
 import { useState, useEffect } from "react";
 import SearchBar from "@/components/search-bar";
 import { ProductList } from "@/components/product-list";
 
-export const Home = ({
-    user,
-    refreshUser,
-}: {
-    user: User | null;
-    refreshUser: () => Promise<void>;
-}) => {
+export const Home = () => {
     const [data, setData] = useState<Product[] | null>(null);
     const [searchPhase, setSearchPhase] = useState("");
     const [categoryID, setCategoryID] = useState<number | null>(null);

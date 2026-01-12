@@ -140,6 +140,7 @@ export const ProductDetailsPage = ({
             fetchData();
         } catch (error) {
             console.error("Nie udało się usunąć opinii", error);
+            refreshUser();
         }
     };
 
@@ -157,6 +158,7 @@ export const ProductDetailsPage = ({
             fetchData();
         } catch (error) {
             console.error("Nie udało się zaktualizować opinii", error);
+            refreshUser();
         }
     };
 
@@ -166,7 +168,7 @@ export const ProductDetailsPage = ({
             <div className="container mx-auto p-6 space-y-8">
                 <Skeleton className="h-8 w-32" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <Skeleton className="h-[400px] w-full rounded-xl" />
+                    <Skeleton className="h-100 w-full rounded-xl" />
                     <div className="space-y-4">
                         <Skeleton className="h-10 w-3/4" />
                         <Skeleton className="h-6 w-1/4" />
@@ -355,6 +357,7 @@ export const ProductDetailsPage = ({
                             productId={product.ProductID}
                             onCancel={() => setIsWritingReview(false)}
                             onSuccess={handleReviewAdded}
+                            refreshUser={refreshUser}
                         />
                     </div>
                 )}
@@ -408,10 +411,12 @@ function ReviewForm({
     productId,
     onCancel,
     onSuccess,
+    refreshUser,
 }: {
     productId: number;
     onCancel: () => void;
     onSuccess: () => void;
+    refreshUser: () => Promise<void>;
 }) {
     const [rating, setRating] = useState(5);
     const [content, setContent] = useState("");
@@ -431,6 +436,7 @@ function ReviewForm({
             onSuccess();
         } catch (error) {
             console.error("Błąd dodawania opinii:", error);
+            refreshUser();
         } finally {
             setIsSubmitting(false);
         }
@@ -586,7 +592,7 @@ function ReviewItem({
                         <Textarea
                             value={editContent}
                             onChange={(e) => setEditContent(e.target.value)}
-                            className="min-h-[100px] text-sm resize-none border-l-2 border-l-primary/50 pl-4 border-t-0 border-r-0 border-b-0 rounded-none focus-visible:ring-0 px-4 bg-transparent italic"
+                            className="min-h-25 text-sm resize-none border-l-2 border-l-primary/50 pl-4 border-t-0 border-r-0 border-b-0 rounded-none focus-visible:ring-0 px-4 bg-transparent italic"
                         />
                     </div>
 

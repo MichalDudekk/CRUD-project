@@ -1,6 +1,6 @@
 import { type User, type CreateOrderPayload, type Product } from "@/types";
 import { type SetStateAction, type Dispatch, useState, useEffect } from "react";
-import { ProductsService } from "@/services/products"; // Upewnij się, że ścieżka jest poprawna
+import { ProductsService, OrdersService } from "@/services";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export const Cart = ({
     user,
-    // refreshUser,
+    refreshUser,
     cart,
     setCart,
 }: {
@@ -84,14 +84,23 @@ export const Cart = ({
         }));
     };
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = async () => {
         if (!user) {
             navigate("/login");
             return;
         }
-        // Tutaj logika wysyłania zamówienia do API
+
         console.log("Składanie zamówienia:", cart);
-        alert("Funkcja składania zamówienia (TODO)");
+
+        try {
+            await OrdersService.create(cart);
+            setCart({ OrderDetails: [] });
+            console.log("Successfully added order");
+            navigate("/");
+        } catch (error) {
+            console.log(error);
+            refreshUser();
+        }
     };
 
     const totalCost = data
@@ -236,7 +245,7 @@ export const Cart = ({
                                 </div>
 
                                 {/* Cena całkowita za pozycję + Usuń */}
-                                <div className="flex flex-col items-end gap-2 min-w-[100px]">
+                                <div className="flex flex-col items-end gap-2 min-w-25">
                                     <span className="text-xl font-bold text-primary whitespace-nowrap">
                                         {totalPrice}
                                     </span>

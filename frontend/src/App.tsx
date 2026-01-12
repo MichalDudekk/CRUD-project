@@ -69,10 +69,7 @@ function App() {
 
             <div className="ml-1 mr-1 sm:ml-[10%] sm:mr-[10%] ">
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<Home user={user} refreshUser={refreshUser} />}
-                    />
+                    <Route path="/" element={<Home />} />
                     <Route
                         path="/login"
                         element={<Login refreshUser={refreshUser} />}
