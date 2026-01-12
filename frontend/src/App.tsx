@@ -15,6 +15,7 @@ import {
 import type { User, CreateOrderPayload } from "./types";
 import { Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
+import { toast } from "sonner";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -34,6 +35,7 @@ function App() {
         } catch (error) {
             console.log(error);
             setUser(null);
+            if (user !== null) toast.warning("Wylogowano");
         }
     };
 

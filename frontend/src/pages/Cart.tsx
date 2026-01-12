@@ -13,6 +13,7 @@ import {
     Loader2,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const Cart = ({
     user,
@@ -96,9 +97,11 @@ export const Cart = ({
             await OrdersService.create(cart);
             setCart({ OrderDetails: [] });
             console.log("Successfully added order");
+            toast.success("Dodano zamówienie");
             navigate("/");
         } catch (error) {
             console.log(error);
+            toast.error("Coś poszło nie tak");
             refreshUser();
         }
     };

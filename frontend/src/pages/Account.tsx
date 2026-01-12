@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { type User, type Order, type Product, type OrderDetail } from "@/types";
-import { AuthService } from "@/services/auth";
-import { OrdersService } from "@/services/orders";
-import { ProductsService } from "@/services/products";
+import { ProductsService, OrdersService, AuthService } from "@/services/";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +16,7 @@ import {
     Calendar,
     CreditCard,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface AdvancedOrderDetail extends OrderDetail {
     ProductInfo?: Product;
@@ -59,6 +58,7 @@ export const Account = ({
                 );
             } catch (error) {
                 console.error("Błąd pobierania zamówień:", error);
+                toast.error("Błąd pobierania zamówień");
                 refreshUser();
             } finally {
                 setLoadingOrders(false);
@@ -69,7 +69,13 @@ export const Account = ({
     }, [user, navigate, refreshUser]);
 
     const handleLogOut = async () => {
-        await AuthService.logout();
+        try {
+            await AuthService.logout();
+        } catch (error) {
+            console.log(error);
+        }
+
+        toast.warning("Wylogowano");
         navigate("/");
         refreshUser();
     };

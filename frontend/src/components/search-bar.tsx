@@ -46,7 +46,7 @@ export default function SearchBar({
     if (fetchedCategories === null) return;
 
     const categories: { id: null | number; value: string; label: string }[] = [
-        { id: null, value: "all", label: "Wszystkie kategorie" },
+        { id: null, value: "all", label: "Wszystkie" },
     ];
 
     fetchedCategories.reduce((categories, category: Category) => {

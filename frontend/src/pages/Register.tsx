@@ -3,6 +3,8 @@ import { RegisterForm } from "@/components/register-form";
 import { AuthService } from "@/services/auth";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
+import type { ApiError } from "@/types";
 
 export const Register = () => {
     const navigate = useNavigate();
@@ -12,11 +14,15 @@ export const Register = () => {
 
         try {
             await AuthService.register({ email, password });
+            toast.success("Zarejestrowano");
 
             navigate("/login");
         } catch (error) {
             const axiosError = error as AxiosError;
-            if (axiosError.response) console.log(axiosError.response.data);
+            if (axiosError.response) {
+                const newError: ApiError = axiosError.response.data as ApiError;
+                toast.error(`${newError.error}`);
+            }
         }
     };
 

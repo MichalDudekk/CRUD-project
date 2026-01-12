@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export const ProductDetailsPage = ({
     user,
@@ -137,9 +138,11 @@ export const ProductDetailsPage = ({
         if (!confirm("Czy na pewno chcesz usunąć tę opinię?")) return;
         try {
             await ProductsService.deleteReviewById(reviewId);
+            toast.success("Usunięto opinie");
             fetchData();
         } catch (error) {
             console.error("Nie udało się usunąć opinii", error);
+            toast.error("Coś poszło nie tak");
             refreshUser();
         }
     };
@@ -155,9 +158,11 @@ export const ProductDetailsPage = ({
                 Content: content,
                 Rating: rating,
             });
+            toast.success("Zaktualizowano opinie");
             fetchData();
         } catch (error) {
             console.error("Nie udało się zaktualizować opinii", error);
+            toast.error("Nie udało się zaktualizować opinii");
             refreshUser();
         }
     };
@@ -433,9 +438,11 @@ function ReviewForm({
                 Content: content,
                 Status: "Shown",
             });
+            toast.success("Dodano opinie");
             onSuccess();
         } catch (error) {
             console.error("Błąd dodawania opinii:", error);
+            toast.error("Coś poszło nie tak");
             refreshUser();
         } finally {
             setIsSubmitting(false);
