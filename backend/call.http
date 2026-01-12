@@ -109,8 +109,8 @@ Content-Type: application/json
 
 {
     "CategoryID": 2,
-    "Name": "Poduct2",
-    "UnitPrice": 200.00,
+    "Name": "Krzesło",
+    "UnitPrice": 269.99,
     "Description": "No desc",
     "Functionality": "No desc",
     "PhotoPath": "/asdasd.com",

@@ -3,6 +3,7 @@ import { AuthService, ProductsService } from "@/services";
 import { type Product, type User, type ProductSearchParams } from "@/types";
 import { useState, useEffect } from "react";
 import SearchBar from "@/components/search-bar";
+import { ProductList } from "@/components/product-list";
 
 export const Home = ({
     user,
@@ -40,7 +41,11 @@ export const Home = ({
                 type="text"
                 placeholder="Search..."
                 onSearch={onSearch}
+                className="w-[90%] ml-[5%] mr-[5%] md:w-[60%] md:ml-[20%] md:mr-[20%] mb-4"
             />
+            <div className="w-[90%] ml-[5%] mr-[5%] md:w-[80%] md:ml-[10%] md:mr-[10%] mb-4">
+                <ProductList products={data} />
+            </div>
         </>
     );
 };
