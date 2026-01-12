@@ -19,7 +19,6 @@ import type { Category } from "@/types";
 import { ProductsService } from "@/services";
 
 interface SearchBarProps extends React.ComponentProps<"input"> {
-    // Zmieniono typ category na number | null (zgodnie z tablicą categories)
     onSearch: (query: string, category: number | null) => void;
 }
 
@@ -29,7 +28,7 @@ export default function SearchBar({
     ...props
 }: SearchBarProps) {
     const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState("all"); // Przechowujemy string (value) dla UI
+    const [value, setValue] = React.useState("all");
     const [searchQuery, setSearchQuery] = React.useState("");
 
     const [fetchedCategories, setFetchedCategories] = React.useState<
@@ -47,7 +46,7 @@ export default function SearchBar({
     if (fetchedCategories === null) return;
 
     const categories: { id: null | number; value: string; label: string }[] = [
-        { id: null, value: "all", label: "All Categories" },
+        { id: null, value: "all", label: "Wszystkie kategorie" },
     ];
 
     fetchedCategories.reduce((categories, category: Category) => {
@@ -59,7 +58,6 @@ export default function SearchBar({
         return categories;
     }, categories);
 
-    // Funkcja pomocnicza do wyciągania ID na podstawie wartości string
     const getCategoryId = (categoryValue: string) => {
         const category = categories.find((c) => c.value === categoryValue);
         return category ? category.id : null;
@@ -70,7 +68,6 @@ export default function SearchBar({
         onSearch(searchQuery, currentCategoryId);
     };
 
-    // Obsługa entera w polu input (opcjonalne, ale dobra praktyka)
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             handleSearchClick();
@@ -82,13 +79,9 @@ export default function SearchBar({
     };
 
     const handleCategoryChange = (currentValue: string) => {
-        // Logika wyboru: jeśli klikniesz to samo, nic się nie zmienia (lub możesz odznaczać)
-        // Tutaj zakładam proste nadpisanie wartości
         setValue(currentValue);
         setOpen(false);
 
-        // Opcjonalnie: Automatyczne wyszukiwanie po zmianie kategorii
-        // Jeśli nie chcesz auto-search, usuń poniższą linię:
         const newCategoryId = getCategoryId(currentValue);
         onSearch(searchQuery, newCategoryId);
     };
@@ -108,7 +101,7 @@ export default function SearchBar({
             <input
                 {...props}
                 type="text"
-                placeholder="Search..."
+                placeholder="Szukaj..."
                 value={searchQuery}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
@@ -132,7 +125,7 @@ export default function SearchBar({
                 </PopoverTrigger>
                 <PopoverContent className="w-50 p-0" align="end">
                     <Command>
-                        <CommandInput placeholder="Search category..." />
+                        <CommandInput placeholder="Szukaj kategorii..." />
                         <CommandList>
                             <CommandEmpty>No category found.</CommandEmpty>
                             <CommandGroup>
