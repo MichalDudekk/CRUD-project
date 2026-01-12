@@ -39,9 +39,9 @@ export function RegisterForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Sign in your account</CardTitle>
+                    <CardTitle>Zarejestruj się</CardTitle>
                     <CardDescription>
-                        Enter your email below to sign in your account
+                        Podaj swój email, aby się zarejestrować
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -51,8 +51,8 @@ export function RegisterForm({
                                 <FieldLabel htmlFor="email">Email</FieldLabel>
                                 <Input
                                     id="email"
-                                    // type="email"
-                                    type="text"
+                                    type="email"
+                                    // type="text"
                                     name="email"
                                     placeholder="m@example.com"
                                     required
@@ -72,11 +72,11 @@ export function RegisterForm({
                                 />
                             </Field>
                             <Field>
-                                <Button type="submit">Sign In</Button>
+                                <Button type="submit">Zarejestruj</Button>
                                 <FieldDescription className="text-center">
-                                    Already have an account?{" "}
+                                    Masz już konto?{" "}
                                     <Link to="/login" className="underline">
-                                        Log in
+                                        Zaloguj się
                                     </Link>
                                 </FieldDescription>
                             </Field>

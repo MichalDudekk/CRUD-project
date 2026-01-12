@@ -39,9 +39,9 @@ export function LoginForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Login to your account</CardTitle>
+                    <CardTitle>Zaloguj się</CardTitle>
                     <CardDescription>
-                        Enter your email below to login to your account
+                        Podaj swój email, aby się zalogować
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -67,7 +67,7 @@ export function LoginForm({
                                         href="#"
                                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                                     >
-                                        Forgot your password?
+                                        Zapomniałeś hasła?
                                     </a>
                                 </div>
                                 <Input
@@ -78,11 +78,11 @@ export function LoginForm({
                                 />
                             </Field>
                             <Field>
-                                <Button type="submit">Login</Button>
+                                <Button type="submit">Zaloguj</Button>
                                 <FieldDescription className="text-center">
-                                    Don&apos;t have an account?{" "}
+                                    Nie masz konta?{" "}
                                     <Link to="/register" className="underline">
-                                        Sign up
+                                        Zarejestruj się
                                     </Link>
                                 </FieldDescription>
                             </Field>

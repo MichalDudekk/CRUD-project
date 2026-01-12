@@ -127,7 +127,9 @@ export default function SearchBar({
                     <Command>
                         <CommandInput placeholder="Szukaj kategorii..." />
                         <CommandList>
-                            <CommandEmpty>No category found.</CommandEmpty>
+                            <CommandEmpty>
+                                Nie znaleziono kategorii.
+                            </CommandEmpty>
                             <CommandGroup>
                                 {categories.map((category) => (
                                     <CommandItem
