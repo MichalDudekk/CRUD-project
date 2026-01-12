@@ -78,11 +78,11 @@ function ProductItem({ product }: { product: Product }) {
                         </span>
 
                         {product.UnitsInStock > 0 ? (
-                            <span className="text-xs text-green-600 font-medium hidden sm:inline-block">
+                            <span className="text-xs text-green-500 font-medium hidden sm:inline-block">
                                 Dostępny ({product.UnitsInStock} szt.)
                             </span>
                         ) : (
-                            <span className="text-xs text-destructive font-medium">
+                            <span className="text-xs text-red-500 font-medium">
                                 Niedostępny
                             </span>
                         )}

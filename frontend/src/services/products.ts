@@ -7,6 +7,7 @@ import {
     type ProductSearchParams,
     type Review,
     type ApiMessage,
+    type UpdateReviewPayload,
 } from "../types";
 
 export const ProductsService = {
@@ -44,6 +45,21 @@ export const ProductsService = {
             review
         );
         return response.data;
+    },
+
+    deleteReviewById: async (ReviewID: number) => {
+        const response = await api.delete<ApiMessage>(
+            `/products/reviews/${ReviewID}`
+        );
+        return response.data;
+    },
+
+    updateReview: async (payload: UpdateReviewPayload) => {
+        const response = await api.patch<ApiMessage>(
+            "/products/reviews",
+            payload
+        );
+        return response;
     },
 
     getCategoryById: async (id: number) => {

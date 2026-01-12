@@ -27,7 +27,7 @@ PATCH http://localhost:3000/api/users/RemoveSessionByEmail
 Content-Type: application/json
 
 {
-    "Email": "admin"
+    "Email": "noadmin"
 }
 
 ### Dodaj ShippingDetail
