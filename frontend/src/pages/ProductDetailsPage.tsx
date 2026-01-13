@@ -94,6 +94,7 @@ export const ProductDetailsPage = ({
     const handleAddToCart = () => {
         if (!product) return;
         console.log(`Dodano do koszyka: ${product.Name}, Ilość: ${quantity}`);
+        toast.success("Dodano do koszyka");
 
         setCart((prev) => {
             const details: {
