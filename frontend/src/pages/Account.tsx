@@ -75,7 +75,6 @@ export const Account = ({
             console.log(error);
         }
 
-        toast.warning("Wylogowano");
         navigate("/");
         refreshUser();
     };
